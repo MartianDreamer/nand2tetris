@@ -16,12 +16,7 @@ CHIP Mux4Way16 {
     OUT out[16];
 
     PARTS:
-    DMux4Way(in=true, sel=sel[0..1], a=Sela, b=Selb, c=Selc, d=Seld);
-    And16(a=a, b[0]=Sela, b[1]=Sela, b[2]=Sela, b[3]=Sela, b[4]=Sela, b[5]=Sela, b[6]=Sela, b[7]=Sela, b[8]=Sela, b[9]=Sela, b[10]=Sela, b[11]=Sela, b[12]=Sela, b[13]=Sela, b[14]=Sela, b[15]=Sela, out=Vala);
-    And16(a=b, b[0]=Selb, b[1]=Selb, b[2]=Selb, b[3]=Selb, b[4]=Selb, b[5]=Selb, b[6]=Selb, b[7]=Selb, b[8]=Selb, b[9]=Selb, b[10]=Selb, b[11]=Selb, b[12]=Selb, b[13]=Selb, b[14]=Selb, b[15]=Selb, out=Valb);
-    And16(a=c, b[0]=Selc, b[1]=Selc, b[2]=Selc, b[3]=Selc, b[4]=Selc, b[5]=Selc, b[6]=Selc, b[7]=Selc, b[8]=Selc, b[9]=Selc, b[10]=Selc, b[11]=Selc, b[12]=Selc, b[13]=Selc, b[14]=Selc, b[15]=Selc, out=Valc);
-    And16(a=d, b[0]=Seld, b[1]=Seld, b[2]=Seld, b[3]=Seld, b[4]=Seld, b[5]=Seld, b[6]=Seld, b[7]=Seld, b[8]=Seld, b[9]=Seld, b[10]=Seld, b[11]=Seld, b[12]=Seld, b[13]=Seld, b[14]=Seld, b[15]=Seld, out=Vald);
-    Or16(a=Vala, b=Valb, out=Valab);
-    Or16(a=Valab, b=Valc, out=Valabc);
-    Or16(a=Valabc, b=Vald, out=out);
+    Mux16(a=a, b=b, sel=sel[0], out=Muxab);
+    Mux16(a=c, b=d, sel=sel[0], out=Muxcd);
+    Mux16(a=Muxab, b=Muxcd, sel=sel[1], out=out);
 }

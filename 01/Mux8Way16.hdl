@@ -20,8 +20,5 @@ CHIP Mux8Way16 {
     PARTS:
     Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=abcd);
     Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=efgh);
-    Not(in=sel[2], out=Notsel2);
-    And16(a=abcd, b[0]=Notsel2, b[1]=Notsel2, b[2]=Notsel2, b[3]=Notsel2, b[4]=Notsel2, b[5]=Notsel2, b[6]=Notsel2, b[7]=Notsel2, b[8]=Notsel2, b[9]=Notsel2, b[10]=Notsel2, b[11]=Notsel2, b[12]=Notsel2, b[13]=Notsel2, b[14]=Notsel2, b[15]=Notsel2, out=abcdAndNotsel2);
-    And16(a=efgh, b[0]=sel[2], b[1]=sel[2], b[2]=sel[2], b[3]=sel[2], b[4]=sel[2], b[5]=sel[2], b[6]=sel[2], b[7]=sel[2], b[8]=sel[2], b[9]=sel[2], b[10]=sel[2], b[11]=sel[2], b[12]=sel[2], b[13]=sel[2], b[14]=sel[2], b[15]=sel[2], out=efghAndsel2);
-    Or16(a=abcdAndNotsel2, b=efghAndsel2, out=out);
+    Mux16(a=abcd, b=efgh, sel=sel[2], out=out);
 }
