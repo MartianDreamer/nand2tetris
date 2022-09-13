@@ -42,5 +42,28 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // Zero x
+    Not(in=zx, out=Notzx);
+    And16(a=x, b[0]=Notzx, b[1]=Notzx, b[2]=Notzx, b[3]=Notzx, b[4]=Notzx, b[5]=Notzx, b[6]=Notzx,b[7]=Notzx,b[8]=Notzx,b[9]=Notzx, b[10]=Notzx, b[11]=Notzx, b[12]=Notzx, b[13]=Notzx, b[14]=Notzx,b[15]=Notzx, out=Zerox);
+    // Negate x
+    Not16(in=Zerox, out=Negatex);
+    Mux16(a=Zerox, b=Negatex, sel=nx, out=Finalx);
+    // Zero y
+    Not(in=zy, out=Notzy);
+    And16(a=y, b[0]=Notzy, b[1]=Notzy, b[2]=Notzy, b[3]=Notzy, b[4]=Notzy, b[5]=Notzy, b[6]=Notzy,b[7]=Notzy,b[8]=Notzy,b[9]=Notzy, b[10]=Notzy, b[11]=Notzy, b[12]=Notzy, b[13]=Notzy, b[14]=Notzy,b[15]=Notzy, out=Zeroy);
+    // Negate y
+    Not16(in=Zeroy, out=Negatey);
+    Mux16(a=Zeroy, b=Negatey, sel=ny, out=Finaly);
+    // Compute out
+    Add16(a=Finalx, b=Finaly, out=Addout);
+    And16(a=Finalx, b=Finaly, out=Andout);
+    Mux16(a=Andout, b=Addout, sel=f, out=fout);
+    // Negate out
+    Not16(in=fout, out=Negateout);
+    Mux16(a=fout, b=Negateout, sel=no, out=out, out[15]=ng, out[0..7]=low8, out[8..15]=high8);
+    // zr
+    Or8Way(in=low8, out=low);
+    Or8Way(in=high8, out=high);
+    Or(a=low, b=high, out=iszero);
+    Not(in=iszero, out=zr);
 }
