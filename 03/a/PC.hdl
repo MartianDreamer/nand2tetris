@@ -16,9 +16,11 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    Or(a=reset, b=inc, out=Sel0);
-    Or(a=load, b=inc, out=Sel1);
-    Register(in=Reg, load=true, out=Outreg, out=out);
+    Mux16(a=in, b[0]=false, b[1]=false, b[2]=false, b[3]=false, b[4]=false, b[5]=false, b[6]=false, b[7]=false, b[8]=false, b[9]=false, b[10]=false, b[11]=false, b[12]=false, b[13]=false, b[14]=false, b[15]=false, sel=reset, out=resetOrloadOut);
+    Or(a=reset, b=load, out=resetOrload);
     Inc16(in=Outreg, out=Outinc);
-    Mux8Way16(a=Outreg, b=Outinc, c=in, d=in, e[0]=false, e[1]=false, e[2]=false, e[3]=false, e[4]=false, e[5]=false, e[6]=false, e[7]=false, e[8]=false, e[9]=false, e[10]=false, e[11]=false, e[12]=false, e[13]=false, e[14]=false, e[15]=false, f[0]=false, f[1]=false, f[2]=false, f[3]=false, f[4]=false, f[5]=false, f[6]=false, f[7]=false, f[8]=false, f[9]=false, f[10]=false, f[11]=false, f[12]=false, f[13]=false, f[14]=false, f[15]=false, g[0]=false, g[1]=false, g[2]=false, g[3]=false, g[4]=false, g[5]=false, g[6]=false, g[7]=false, g[8]=false, g[9]=false, g[10]=false, g[11]=false, g[12]=false, g[13]=false, g[14]=false, g[15]=false, h[0]=false, h[1]=false, h[2]=false, h[3]=false, h[4]=false, h[5]=false, h[6]=false, h[7]=false, h[8]=false, h[9]=false, h[10]=false, h[11]=false, h[12]=false, h[13]=false, h[14]=false, h[15]=false, sel[2]=reset, sel[1]=load, sel[0]=inc, out=Reg);
+    Mux16(a=Outinc, b=resetOrloadOut, sel=resetOrload, out=resetOrloadOrincOut);
+    Or(a=resetOrload, b=inc, out=resetOrloadOrinc);
+    Mux16(a=Outreg, b=resetOrloadOrincOut, sel=resetOrloadOrinc, out=Reg);
+    Register(in=Reg, load=true, out=Outreg, out=out);
 }
