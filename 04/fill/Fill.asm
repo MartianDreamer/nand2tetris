@@ -12,53 +12,58 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
-@24576 // 0
-D=A //
-@R0 //
-M=D // save size of the screen
-@KBD //4
-D=M // get keyboard value
-@10 
-D;JNE // if keyboard is being pressed jump to instruction 10
-@30
-0;JMP // else jump to instruction 4
-@SCREEN // 10
-D=A //
-@R1 //
-M=D // reset current pixel position
-@SCREEN
+
+// Set size
+@24575
+D=A
+@size
+M=D
+
+// Listening to keyboard
+(LISTEN_KBD)
+@16384
+D=A
+@pos
+M=D
+@KBD
 D=M
-@4
-D+1; JEQ
-@R0 // 24
-D=M // get screen size
-@R1
-M=M+1
-A=M-1
-M=-1 // set screen to black
-@R1
-D=D-M
-@18
+@PRESSED
 D;JNE
-@4
+@UNPRESSED
 0;JMP
+
+(PRESSED)
 @SCREEN
 D=M
-@4
-D; JEQ
-@SCREEN // 10
-D=A //
-@R1 //
-M=D // reset current pixel position
-@R0 //38
-D=M // get screen size
-@R1
+@LISTEN_KBD
+D;JLT
+(PRESSED_LOOP)
+@pos
 M=M+1
 A=M-1
-M=0 // set screen to white
-@R1
-D=D-M
-@38
-D;JNE
-@4
+M=-1
+D=A
+@size
+D=M-D
+@PRESSED_LOOP
+D;JGT
+@LISTEN_KBD
+0;JMP
+
+(UNPRESSED)
+@SCREEN
+D=M
+@LISTEN_KBD
+D;JEQ
+(UNPRESSED_LOOP)
+@pos
+M=M+1
+A=M-1
+M=0
+D=A
+@size
+D=M-D
+@UNPRESSED_LOOP
+D;JGT
+@LISTEN_KBD
 0;JMP
