@@ -47,7 +47,7 @@ CHIP CPU {
     Or(a=isZero, b=isNegative, out=LE);
     And(a=notZero, b=isNegative, out=LT);
 
-    // Detect next pc
+    // Program Counter
     Register(in=outMuxPc, load=true, out[0..14]=pc, out=previousPc);
     Inc16(in=previousPc, out=incPreviousPc);
     Mux16(a=incPreviousPc, b=previousAddressM, sel=GT, out=outGTPc);
@@ -61,7 +61,7 @@ CHIP CPU {
     Mux16(a=outNonResetPc, b[0]=false, b[1]=false, b[2]=false, b[3]=false, b[4]=false, b[5]=false, b[6]=false, b[7]=false, b[8]=false, b[9]=false, b[10]=false, b[11]=false, b[12]=false, b[13]=false, b[14]=false, b[15]=false, sel=reset, out=outMuxPc);
 
     
-    // Write M ?
+    // writeM
     And(a=instruction[3], b=instruction[15], out=writeM);
     
     // Set Address Register 
