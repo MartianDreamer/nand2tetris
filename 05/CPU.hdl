@@ -50,13 +50,13 @@ CHIP CPU {
     // Program Counter
     Register(in=outMuxPc, load=true, out[0..14]=pc, out=previousPc);
     Inc16(in=previousPc, out=incPreviousPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=GT, out=outGTPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=isZero, out=outEQPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=GE, out=outGEPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=LT, out=outLTPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=notZero, out=outNEPc);
-    Mux16(a=incPreviousPc, b=previousAddressM, sel=LE, out=outLEPc);
-    Mux8Way16(a=incPreviousPc, b=outGTPc, c=outEQPc, d=outGEPc, e=outLTPc, f=outNEPc, g=outLEPc, h=previousAddressM, sel=instruction[0..2], out=outBranchingPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=GT, out=outGTPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=isZero, out=outEQPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=GE, out=outGEPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=LT, out=outLTPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=notZero, out=outNEPc);
+    Mux16(a=incPreviousPc, b=currentAddressM, sel=LE, out=outLEPc);
+    Mux8Way16(a=incPreviousPc, b=outGTPc, c=outEQPc, d=outGEPc, e=outLTPc, f=outNEPc, g=outLEPc, h=currentAddressM, sel=instruction[0..2], out=outBranchingPc);
     Mux16(a=incPreviousPc, b=outBranchingPc, sel=instruction[15], out=outNonResetPc);
     Mux16(a=outNonResetPc, b[0]=false, b[1]=false, b[2]=false, b[3]=false, b[4]=false, b[5]=false, b[6]=false, b[7]=false, b[8]=false, b[9]=false, b[10]=false, b[11]=false, b[12]=false, b[13]=false, b[14]=false, b[15]=false, sel=reset, out=outMuxPc);
 
@@ -65,14 +65,14 @@ CHIP CPU {
     And(a=instruction[3], b=instruction[15], out=writeM);
     
     // Set Address Register 
-    Mux4Way16(a=instruction, b=instruction, c=previousAddressM, d=outALU, sel[0]=instruction[5], sel[1]=instruction[15], out=outMuxAddress);
-    ARegister(in=outMuxAddress, load=true, out[0..14]=addressM, out=previousAddressM);
+    Mux4Way16(a=instruction, b=instruction, c=currentAddressM, d=outALU, sel[0]=instruction[5], sel[1]=instruction[15], out=outMuxAddress);
+    ARegister(in=outMuxAddress, load=true, out[0..14]=addressM, out=currentAddressM);
 
     // Set D Register
     And(a=instruction[4], b=instruction[15], out=loadD);
     DRegister(in=outALU, load=loadD, out=outD);
 
     // Set up ALU
-    Mux16(a=previousAddressM, b=inM, sel=instruction[12], out=outMorA);
+    Mux16(a=currentAddressM, b=inM, sel=instruction[12], out=outMorA);
     ALU(x=outD, y=outMorA, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outALU, zr=isZero, ng=isNegative, out=outM);
 }
