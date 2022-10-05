@@ -33,5 +33,5 @@ D=M
 @LOOP
 D;JNE
 (END)
-@19
+@END
 0;JMP
